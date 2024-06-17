@@ -81,6 +81,7 @@ function pull_images() {
     fi
     if [ $? -ne 0 ]; then
       echo Token is $ACCESS_TOKEN. Images $(sudo ctr -n k8s.io images ls). Failed to pull and unpack the image $param. Please rerun the tool to try it again.
+      sleep 600
       exit 1
     fi
   done
