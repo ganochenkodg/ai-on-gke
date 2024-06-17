@@ -74,6 +74,11 @@ function pull_images() {
     if [ "$OAUTH_MECHANISM" == "none" ]; then
       sudo ctr -n k8s.io image pull $param
     elif [ "$OAUTH_MECHANISM" == "serviceaccounttoken" ]; then
+      echo "try to pull from gcr"
+      sudo ctr -n k8s.io image pull gcr.io/google-samples/hello-app:1.0
+      echo "try to pull from public image registry"
+      sudo ctr -n k8s.io image pull us-docker.pkg.dev/vertex-ai/vertex-vision-model-garden-dockers/pytorch-vllm-serve:20240220_0936_RC01
+      echo "try to pull our image"
       sudo ctr -n k8s.io image pull --user "oauth2accesstoken:$ACCESS_TOKEN" $param
     else
       echo "Unknown OAuth mechanism, expected 'None' or 'ServiceAccountToken' but got '$OAUTH_MECHANISM'".
@@ -81,7 +86,7 @@ function pull_images() {
     fi
     if [ $? -ne 0 ]; then
       echo Token is $ACCESS_TOKEN. Images $(sudo ctr -n k8s.io images ls). Failed to pull and unpack the image $param. Please rerun the tool to try it again.
-      sleep 600
+      sleep 900
       exit 1
     fi
   done
