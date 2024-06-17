@@ -72,6 +72,7 @@ function pull_images() {
   for param in "$@"; do
     echo Start pulling $param ...
     if [ "$OAUTH_MECHANISM" == "none" ]; then
+      echo "You must not see this"
       sudo ctr -n k8s.io image pull $param
     elif [ "$OAUTH_MECHANISM" == "serviceaccounttoken" ]; then
       echo "Token is $ACCESS_TOKEN"
