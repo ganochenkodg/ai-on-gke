@@ -74,14 +74,18 @@ function pull_images() {
     if [ "$OAUTH_MECHANISM" == "none" ]; then
       sudo ctr -n k8s.io image pull $param
     elif [ "$OAUTH_MECHANISM" == "serviceaccounttoken" ]; then
-      echo $ACCESS_TOKEN
+      echo "Token is $ACCESS_TOKEN"
       sudo ctr -n k8s.io image pull --user "oauth2accesstoken:$ACCESS_TOKEN" $param
-      sudo ctr -n k8s.io images ls
+      echo "Image list"
+      echo $(sudo ctr -n k8s.io images ls)
+      sudo ctr -n k8s.io image pull --user "oauth2accesstoken:$ACCESS_TOKEN" $param
     else
       echo "Unknown OAuth mechanism, expected 'None' or 'ServiceAccountToken' but got '$OAUTH_MECHANISM'".
       exit 1
     fi
     if [ $? -ne 0 ]; then
+      echo "Image list 2"
+      echo $(sudo ctr -n k8s.io images ls)
       echo Failed to pull and unpack the image $param. Please rerun the tool to try it again.
       exit 1
     fi
